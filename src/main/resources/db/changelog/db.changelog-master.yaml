@@ -1,0 +1,133 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Johanna Doe
+      changes:
+        - createTable:
+            tableName: article
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: title
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: text
+                  type: varchar(255)
+  - changeSet:
+      id: 2
+      author: Corsin Ragettli
+      changes:
+        - renameTable:
+            newTableName: articles
+            oldTableName: article
+        - modifyDataType:
+            columnName: text
+            tableName: articles
+            newDataType: varchar(1000)
+        - addColumn:
+            tableName: articles
+            columns:
+              - column:
+                  name: version
+                  type: int
+              - column:
+                  name: created
+                  type: DATETIME
+  - changeSet:
+      id: 3
+      author: Corsin Ragettli
+      preConditions:
+        - onFail: CONTINUE
+        - onError: CONTINUE
+        - not:
+            - indexExists:
+                indexName: titleIndex
+      changes:
+        - createIndex:
+            tableName: articles
+            indexName: titleIndex
+            columns:
+              - column:
+                  name: title
+                  type: varchar(255)
+  - changeSet:
+      id: 4
+      author: Corsin Ragettli
+      changes:
+        - createTable:
+            tableName: comment
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: article_id
+                  type: UUID
+        - addForeignKeyConstraint:
+            baseColumnNames: article_id
+            baseTableName: comment
+            onDelete: CASCADE
+            constraintName: comment_fk
+            referencedTableName: articles
+            referencedColumnNames: id
+            onUpdate: CASCADE
+  - changeSet:
+      id: 5
+      author: Corsin Ragettli
+      changes:
+        - createTable:
+            tableName: categories
+            columns:
+              - column:
+                  type: int
+                  name: id
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  type: varchar(255)
+                  name: name
+                  constraints:
+                    unique: true
+              - column:
+                  type: varchar(255)
+                  name: description
+        - addColumn:
+            tableName: articles
+            columns:
+              - column:
+                  name: category_id
+                  type: int
+        - addForeignKeyConstraint:
+            baseColumnNames: category_id
+            constraintName: articles_category_fk
+            referencedTableName: categories
+            referencedColumnNames: id
+            baseTableName: articles
+            onUpdate: CASCADE
+            onDelete: RESTRICT
+        - renameTable:
+            oldTableName: comment
+            newTableName: comments
+  - changeSet:
+      id: 6
+      author: Corsin Ragettli
+      changes:
+        - loadData:
+            tableName: "categories"
+            file: "sample.data/category.csv"
+        - loadData:
+            tableName: "articles"
+            file: "sample.data/article.csv"
+        - loadData:
+            tableName: "comments"
+            file: "sample.data/comments.csv"
