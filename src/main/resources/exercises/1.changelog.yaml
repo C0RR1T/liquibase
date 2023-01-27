@@ -1,0 +1,22 @@
+# Contains Exercise 1,2,3
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: Corsin Ragettli
+      changes:
+        - renameTable:
+            newTableName: articles
+            oldTableName: article
+        - modifyDataType:
+            columnName: text
+            tableName: articles
+            newDataType: varchar(1000)
+        - addColumn:
+            tableName: articles
+            columns:
+              - column:
+                  name: version
+                  type: int
+              - column:
+                  name: created
+                  type: DATETIME

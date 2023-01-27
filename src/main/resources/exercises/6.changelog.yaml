@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: 5
+      author: Corsin Ragettli
+      changes:
+        - createTable:
+            tableName: categories
+            columns:
+              - column:
+                  type: int
+                  name: id
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  type: varchar(255)
+                  name: name
+                  constraints:
+                    unique: true
+              - column:
+                  type: varchar(255)
+                  name: description
+        - addColumn:
+            tableName: articles
+            columns:
+              - column:
+                  name: category_id
+                  type: int
+        - addForeignKeyConstraint:
+            baseColumnNames: category_id
+            constraintName: articles_category_fk
+            referencedTableName: categories
+            referencedColumnNames: id
+            baseTableName: articles
+            onUpdate: CASCADE
+            onDelete: RESTRICT
+        - renameTable:
+            oldTableName: comment
+            newTableName: comments

@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: Corsin Ragettli
+      preConditions:
+        - onFail: CONTINUE
+        - onError: CONTINUE
+        - not:
+            - indexExists:
+                indexName: titleIndex
+      changes:
+        - createIndex:
+            tableName: articles
+            indexName: titleIndex
+            columns:
+              - column:
+                  name: title

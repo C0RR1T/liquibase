@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: 4
+      author: Corsin Ragettli
+      changes:
+        - createTable:
+            tableName: comment
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: article_id
+                  type: UUID
+        - addForeignKeyConstraint:
+            baseColumnNames: article_id
+            baseTableName: comment
+            onDelete: CASCADE
+            constraintName: comment_fk
+            referencedTableName: articles
+            referencedColumnNames: id
+            onUpdate: CASCADE

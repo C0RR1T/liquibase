@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 6
+      author: Corsin Ragettli
+      changes:
+        - loadData:
+            tableName: "categories"
+            file: "sample.data/category.csv"
+        - loadData:
+            tableName: "articles"
+            file: "sample.data/article.csv"
+        - loadData:
+            tableName: "comments"
+            file: "sample.data/comments.csv"
